@@ -1,29 +1,56 @@
 #include <stdio.h>
+#include <stdlib.h>
 
-typedef struct Pessoas
-{
-  int idade;
-  float altura;
-} Newpessoas;
+/* lista encadeada: no início
+NULL
+12
+32-12
+65-32-12
+*/
 
-void imprimirPessoa(Newpessoas P)
+typedef struct No
 {
-  printf("idade: %d \naltura: %f", P.idade, P.altura);
+  int valor;
+  struct No *proximo;
+} No;
+
+No *inserirValor(No *lista, int valor)
+{
+  No *novo = malloc(sizeof(No));
+  if (novo)
+  {
+    // inserir o valor e a lista no endereco de memoria criado com malloc
+    novo->valor = valor;
+    novo->proximo = lista;
+  }
+
+  return novo;
 }
 
-// o parâmetro P é um ponteiro para a strucy Newpessoas
-void setPessoa(Newpessoas *P, int idade, float altura)
+void mostrarLista(No *lista)
 {
-
-  (*P).idade = idade;
-  P->altura = altura;
+  if (lista)
+  {
+    printf("%d ", lista->valor);
+    // lista = int valor = 22, proximo = int valor = 32, proximo = int valor = 232, proximo = NULL
+    mostrarLista(lista->proximo);
+  }
 }
 
 int main()
 {
-  Newpessoas p1 = {3, 2};
-  setPessoa(&p1, 41, 1.7);
-  imprimirPessoa(p1);
+
+  // o inicio é nulo
+  No *lista = NULL;
+
+  // 1)retorno -> lista = int valor = 232, proximo = NULL
+  lista = inserirValor(lista, 232);
+  // 2)retorno -> lista = int valor = 32, proximo = int valor = 232, proximo = NULL
+  lista = inserirValor(lista, 32);
+  // 3)retorno -> lista = int valor = 22, proximo = int valor = 32, proximo = int valor = 232, proximo = NULL
+  lista = inserirValor(lista, 22);
+
+  mostrarLista(lista);
 
   return 0;
 }
